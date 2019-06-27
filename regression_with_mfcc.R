@@ -1,4 +1,5 @@
 library(dplyr)
+library(ISLR)
 
 musics_data <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/logistic_mfcc_8tracks_without_users_complete_v2.csv")
 musics_data_2 <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/logistic_mfcc_8tracks.csv")
@@ -22,13 +23,21 @@ fit <- lm(relax ~ ., data=musics_data)
 summary(fit)
 
 #com todas as variaveis independentes
-model <- glm(relax~.,family=binomial(link='logit'),data=musics_data)
-
+smp_siz = floor(0.80*nrow(musics_data))
+set.seed(171)
+train_ind = sample(seq_len(nrow(musics_data)),size = smp_siz)
+train =musics_data[train_ind,]
+test=musics_data[-train_ind,]
+model <- glm(relax~.,family=binomial(link='logit'),data=train)
 summary(model)
 
 #com todas as variaveis independentes (normalizado)
-model_scaled <- glm(relax~.,family=binomial(link='logit'),data=musics_data_scaled)
-
+smp_siz = floor(0.80*nrow(musics_data_scaled))
+set.seed(171)
+train_ind = sample(seq_len(nrow(musics_data_scaled)),size = smp_siz)
+train =musics_data_scaled[train_ind,]
+test=musics_data_scaled[-train_ind,]
+model_scaled <- glm(relax~.,family=binomial(link='logit'),data=train)
 summary(model_scaled)
 
 #k-means para 8tracks relaxed
@@ -95,7 +104,66 @@ write.csv(cluster_five, file = "/home/danielgondim/workspace-new/phd/experiments
 not_relax_8tracks <- musics_data_2[5887:11772,]
 
 #modelo de regressao pro Cluster 1 (503 usuários)
-cluster_one_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/8tracks_cluster_one_v2.csv")
+cluster_one_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/8tracks_cluster_one_v2.csv")
+relax_column <- c(cluster_one_regression[,35])
 cluster_one_regression_scaled <- scale(cluster_one_regression[,2:34])
-model_cluster_one <- glm(relax~.-user_id,family=binomial(link='logit'),data=cluster_one_regression)
+cluster_one_regression_scaled <- cbind(cluster_one_regression_scaled, data.frame(relax = c(relax_column)))
+smp_siz = floor(0.80*nrow(cluster_one_regression_scaled))
+set.seed(171)
+train_ind = sample(seq_len(nrow(cluster_one_regression_scaled)),size = smp_siz)
+train =cluster_one_regression_scaled[train_ind,]
+test=cluster_one_regression_scaled[-train_ind,]
+model_cluster_one <- glm(relax~.,family=binomial(link='logit'),data=train)
 summary(model_cluster_one)
+
+#modelo de regressao pro Cluster 2 (591 usuários)
+cluster_two_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/8tracks_cluster_two_v2.csv")
+relax_column <- c(cluster_two_regression[,35])
+cluster_two_regression_scaled <- scale(cluster_two_regression[,2:34])
+cluster_two_regression_scaled <- cbind(cluster_two_regression_scaled, data.frame(relax = c(relax_column)))
+smp_siz = floor(0.80*nrow(cluster_two_regression_scaled))
+set.seed(171)
+train_ind = sample(seq_len(nrow(cluster_two_regression_scaled)),size = smp_siz)
+train =cluster_two_regression_scaled[train_ind,]
+test=cluster_two_regression_scaled[-train_ind,]
+model_cluster_two <- glm(relax~.,family=binomial(link='logit'),data=train)
+summary(model_cluster_two)
+
+#modelo de regressao pro Cluster 3 (1961 usuários)
+cluster_three_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/8tracks_cluster_three_v2.csv")
+relax_column <- c(cluster_three_regression[,35])
+cluster_three_regression_scaled <- scale(cluster_three_regression[,2:34])
+cluster_three_regression_scaled <- cbind(cluster_three_regression_scaled, data.frame(relax = c(relax_column)))
+smp_siz = floor(0.80*nrow(cluster_three_regression_scaled))
+set.seed(171)
+train_ind = sample(seq_len(nrow(cluster_three_regression_scaled)),size = smp_siz)
+train =cluster_three_regression_scaled[train_ind,]
+test=cluster_three_regression_scaled[-train_ind,]
+model_cluster_three <- glm(relax~.,family=binomial(link='logit'),data=train)
+summary(model_cluster_three)
+
+#modelo de regressao pro Cluster 4 (2221 usuários)
+cluster_four_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/8tracks_cluster_four_v2.csv")
+relax_column <- c(cluster_four_regression[,35])
+cluster_four_regression_scaled <- scale(cluster_four_regression[,2:34])
+cluster_four_regression_scaled <- cbind(cluster_four_regression_scaled, data.frame(relax = c(relax_column)))
+smp_siz = floor(0.80*nrow(cluster_four_regression_scaled))
+set.seed(171)
+train_ind = sample(seq_len(nrow(cluster_four_regression_scaled)),size = smp_siz)
+train =cluster_four_regression_scaled[train_ind,]
+test=cluster_four_regression_scaled[-train_ind,]
+model_cluster_four <- glm(relax~.,family=binomial(link='logit'),data=train)
+summary(model_cluster_four)
+
+#modelo de regressao pro Cluster 5 (610 usuários)
+cluster_five_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/8tracks_cluster_five_v2.csv")
+relax_column <- c(cluster_five_regression[,35])
+cluster_five_regression_scaled <- scale(cluster_five_regression[,2:34])
+cluster_five_regression_scaled <- cbind(cluster_five_regression_scaled, data.frame(relax = c(relax_column)))
+smp_siz = floor(0.80*nrow(cluster_five_regression_scaled))
+set.seed(171)
+train_ind = sample(seq_len(nrow(cluster_five_regression_scaled)),size = smp_siz)
+train =cluster_five_regression_scaled[train_ind,]
+test=cluster_five_regression_scaled[-train_ind,]
+model_cluster_five <- glm(relax~.,family=binomial(link='logit'),data=train)
+summary(model_cluster_five)
