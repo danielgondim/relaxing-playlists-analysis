@@ -30,6 +30,12 @@ train =musics_data[train_ind,]
 test=musics_data[-train_ind,]
 model <- glm(relax~.,family=binomial(link='logit'),data=train)
 summary(model)
+results_prob <- predict(model,newdata=test,type='response')
+# If prob > 0.5 then 1, else 0
+results <- ifelse(results_prob > 0.5,1,0)
+answers <- test$relax
+misClasificError <- mean(answers != results)
+print(paste('Accuracy',1-misClasificError))
 
 #com todas as variaveis independentes (normalizado)
 smp_siz = floor(0.80*nrow(musics_data_scaled))
@@ -39,6 +45,14 @@ train =musics_data_scaled[train_ind,]
 test=musics_data_scaled[-train_ind,]
 model_scaled <- glm(relax~.,family=binomial(link='logit'),data=train)
 summary(model_scaled)
+model_scaled <- glm(relax ~ energy + instrumentalness + loudness + valence + mffc3.mean + mffc6.mean  + mffc8.mean + mffc10.mean + mffc11.mean + mffc1.variance + mffc5.variance + mffc11.variance + mffc12.variance,family=binomial(link='logit'),data=train)
+anova(model_scaled, test="Chisq")
+results_prob <- predict(model_scaled,newdata=test,type='response')
+# If prob > 0.5 then 1, else 0
+results <- ifelse(results_prob > 0.5,1,0)
+answers <- test$relax
+misClasificError <- mean(answers != results)
+print(paste('Accuracy',1-misClasificError))
 
 #k-means para 8tracks relaxed
 relaxed_8tracks <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/logistic_mfcc_8tracks_relax_v2.csv")
