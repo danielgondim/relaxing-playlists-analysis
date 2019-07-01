@@ -1,5 +1,7 @@
 library(dplyr)
 library(ISLR)
+library(mccr)
+library(broom)
 
 musics_data <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/logistic_mfcc_8tracks_without_users_complete_v2.csv")
 musics_data_2 <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/logistic_mfcc_8tracks.csv")
@@ -51,8 +53,10 @@ results_prob <- predict(model_scaled,newdata=test,type='response')
 # If prob > 0.5 then 1, else 0
 results <- ifelse(results_prob > 0.5,1,0)
 answers <- test$relax
+mccr(answers, results)
 misClasificError <- mean(answers != results)
 print(paste('Accuracy',1-misClasificError))
+output_dataframe <- tidy(model_scaled, conf.int=TRUE, conf.level=.95)
 
 #k-means para 8tracks relaxed
 relaxed_8tracks <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/logistic_mfcc_8tracks_relax_v2.csv")
@@ -128,7 +132,15 @@ train_ind = sample(seq_len(nrow(cluster_one_regression_scaled)),size = smp_siz)
 train =cluster_one_regression_scaled[train_ind,]
 test=cluster_one_regression_scaled[-train_ind,]
 model_cluster_one <- glm(relax~.,family=binomial(link='logit'),data=train)
+model_cluster_one <- glm(relax ~ energy + acousticness + valence + mffc12.variance, family=binomial(link='logit'),data=train)
 summary(model_cluster_one)
+results_prob <- predict(model_cluster_one,newdata=test,type='response')
+# If prob > 0.5 then 1, else 0
+results <- ifelse(results_prob > 0.5,1,0)
+answers <- test$relax
+mccr(answers, results)
+misClasificError <- mean(answers != results)
+print(paste('Accuracy',1-misClasificError))
 
 #modelo de regressao pro Cluster 2 (591 usuários)
 cluster_two_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/8tracks_cluster_two_v2.csv")
@@ -141,7 +153,15 @@ train_ind = sample(seq_len(nrow(cluster_two_regression_scaled)),size = smp_siz)
 train =cluster_two_regression_scaled[train_ind,]
 test=cluster_two_regression_scaled[-train_ind,]
 model_cluster_two <- glm(relax~.,family=binomial(link='logit'),data=train)
+model_cluster_two <- glm(relax ~ liveness + acousticness + loudness + mffc1.mean + mffc2.mean + mffc8.mean + mffc1.variance + mffc3.variance + mffc5.variance + mffc7.variance + mffc9.variance + mffc10.variance,family=binomial(link='logit'),data=train)
 summary(model_cluster_two)
+results_prob <- predict(model_cluster_two,newdata=test,type='response')
+# If prob > 0.5 then 1, else 0
+results <- ifelse(results_prob > 0.5,1,0)
+answers <- test$relax
+mccr(answers, results)
+misClasificError <- mean(answers != results)
+print(paste('Accuracy',1-misClasificError))
 
 #modelo de regressao pro Cluster 3 (1961 usuários)
 cluster_three_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/8tracks_cluster_three_v2.csv")
@@ -154,7 +174,15 @@ train_ind = sample(seq_len(nrow(cluster_three_regression_scaled)),size = smp_siz
 train =cluster_three_regression_scaled[train_ind,]
 test=cluster_three_regression_scaled[-train_ind,]
 model_cluster_three <- glm(relax~.,family=binomial(link='logit'),data=train)
+model_cluster_three <- glm(relax~ speechiness + acousticness + danceability + loudness + mffc3.mean + mffc5.mean + mffc7.mean + mffc8.mean + mffc10.mean + mffc11.mean + mffc2.variance + mffc3.variance + mffc4.variance + mffc6.variance + mffc8.variance + mffc11.variance + mffc12.variance,family=binomial(link='logit'),data=train)
 summary(model_cluster_three)
+results_prob <- predict(model_cluster_three,newdata=test,type='response')
+# If prob > 0.5 then 1, else 0
+results <- ifelse(results_prob > 0.5,1,0)
+answers <- test$relax
+mccr(answers, results)
+misClasificError <- mean(answers != results)
+print(paste('Accuracy',1-misClasificError))
 
 #modelo de regressao pro Cluster 4 (2221 usuários)
 cluster_four_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/8tracks_cluster_four_v2.csv")
@@ -167,7 +195,15 @@ train_ind = sample(seq_len(nrow(cluster_four_regression_scaled)),size = smp_siz)
 train =cluster_four_regression_scaled[train_ind,]
 test=cluster_four_regression_scaled[-train_ind,]
 model_cluster_four <- glm(relax~.,family=binomial(link='logit'),data=train)
+model_cluster_four <- glm(relax~ energy + liveness + speechiness + acousticness + mffc3.mean + mffc4.mean + mffc7.mean + mffc8.mean + mffc10.mean + mffc1.variance + mffc11.variance + mffc12.variance,family=binomial(link='logit'),data=train)
 summary(model_cluster_four)
+results_prob <- predict(model_cluster_four,newdata=test,type='response')
+# If prob > 0.5 then 1, else 0
+results <- ifelse(results_prob > 0.5,1,0)
+answers <- test$relax
+mccr(answers, results)
+misClasificError <- mean(answers != results)
+print(paste('Accuracy',1-misClasificError))
 
 #modelo de regressao pro Cluster 5 (610 usuários)
 cluster_five_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/8tracks_cluster_five_v2.csv")
@@ -180,4 +216,12 @@ train_ind = sample(seq_len(nrow(cluster_five_regression_scaled)),size = smp_siz)
 train =cluster_five_regression_scaled[train_ind,]
 test=cluster_five_regression_scaled[-train_ind,]
 model_cluster_five <- glm(relax~.,family=binomial(link='logit'),data=train)
+model_cluster_five <- glm(relax~ danceability + valence + mffc4.mean + mffc5.mean + mffc6.mean + mffc10.mean + mffc4.variance + mffc10.variance,family=binomial(link='logit'),data=train)
 summary(model_cluster_five)
+results_prob <- predict(model_cluster_five,newdata=test,type='response')
+# If prob > 0.5 then 1, else 0
+results <- ifelse(results_prob > 0.5,1,0)
+answers <- test$relax
+mccr(answers, results)
+misClasificError <- mean(answers != results)
+print(paste('Accuracy',1-misClasificError))
