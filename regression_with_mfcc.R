@@ -2,8 +2,9 @@ library(dplyr)
 library(ISLR)
 library(mccr)
 library(broom)
+library(caret)
 
-musics_data <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/logistic_mfcc_8tracks_without_users_complete_v2.csv")
+musics_data <- read.csv("/home/danielgondim/workspace/relaxing-playlists-analysis/data/logistic_mfcc_8tracks_without_users_complete_v2.csv")
 musics_data_2 <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/logistic_mfcc_8tracks.csv")
 
 for(i in c(1,2:ncol(musics_data))) {
@@ -57,9 +58,14 @@ mccr(answers, results)
 misClasificError <- mean(answers != results)
 print(paste('Accuracy',1-misClasificError))
 output_dataframe <- tidy(model_scaled, conf.int=TRUE, conf.level=.95)
+confusionMatrix(table(results, answers), mode = "prec_recall") 
+precision <- posPredValue(table(results, answers), positive = "1")
+recall  <- sensitivity(table(results, answers), postive = "1")
+f1_val <- (2 * precision * recall) / (precision + recall)
+
 
 #k-means para 8tracks relaxed
-relaxed_8tracks <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/logistic_mfcc_8tracks_relax_v2.csv")
+relaxed_8tracks <- read.csv("/home/danielgondim/workspace/relaxing-playlists-analysis/data/logistic_mfcc_8tracks_relax_v2.csv")
 
 for(i in 2:ncol(relaxed_8tracks)) {
   relaxed_8tracks[,i] <- as.numeric(as.character(relaxed_8tracks[,i]))
@@ -122,7 +128,7 @@ write.csv(cluster_five, file = "/home/danielgondim/workspace-new/phd/experiments
 not_relax_8tracks <- musics_data_2[5887:11772,]
 
 #modelo de regressao pro Cluster 1 (503 usuários)
-cluster_one_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/8tracks_cluster_one_v2.csv")
+cluster_one_regression <- read.csv("/home/danielgondim/workspace/relaxing-playlists-analysis/data/8tracks_cluster_one_v2.csv")
 relax_column <- c(cluster_one_regression[,35])
 cluster_one_regression_scaled <- scale(cluster_one_regression[,2:34])
 cluster_one_regression_scaled <- cbind(cluster_one_regression_scaled, data.frame(relax = c(relax_column)))
@@ -141,6 +147,10 @@ answers <- test$relax
 mccr(answers, results)
 misClasificError <- mean(answers != results)
 print(paste('Accuracy',1-misClasificError))
+confusionMatrix(table(results, answers), mode = "prec_recall") 
+precision <- posPredValue(table(results, answers), positive = "1")
+recall  <- sensitivity(table(results, answers), postive = "1")
+f1_val <- (2 * precision * recall) / (precision + recall)
 
 #modelo de regressao pro Cluster 2 (591 usuários)
 cluster_two_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/8tracks_cluster_two_v2.csv")
@@ -162,6 +172,10 @@ answers <- test$relax
 mccr(answers, results)
 misClasificError <- mean(answers != results)
 print(paste('Accuracy',1-misClasificError))
+confusionMatrix(table(results, answers), mode = "prec_recall") 
+precision <- posPredValue(table(results, answers), positive = "1")
+recall  <- sensitivity(table(results, answers), postive = "1")
+f1_val <- (2 * precision * recall) / (precision + recall)
 
 #modelo de regressao pro Cluster 3 (1961 usuários)
 cluster_three_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/8tracks_cluster_three_v2.csv")
@@ -183,6 +197,10 @@ answers <- test$relax
 mccr(answers, results)
 misClasificError <- mean(answers != results)
 print(paste('Accuracy',1-misClasificError))
+confusionMatrix(table(results, answers), mode = "prec_recall") 
+precision <- posPredValue(table(results, answers), positive = "1")
+recall  <- sensitivity(table(results, answers), postive = "1")
+f1_val <- (2 * precision * recall) / (precision + recall)
 
 #modelo de regressao pro Cluster 4 (2221 usuários)
 cluster_four_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/8tracks_cluster_four_v2.csv")
@@ -204,6 +222,10 @@ answers <- test$relax
 mccr(answers, results)
 misClasificError <- mean(answers != results)
 print(paste('Accuracy',1-misClasificError))
+confusionMatrix(table(results, answers), mode = "prec_recall") 
+precision <- posPredValue(table(results, answers), positive = "1")
+recall  <- sensitivity(table(results, answers), postive = "1")
+f1_val <- (2 * precision * recall) / (precision + recall)
 
 #modelo de regressao pro Cluster 5 (610 usuários)
 cluster_five_regression <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/8tracks_cluster_five_v2.csv")
@@ -225,3 +247,7 @@ answers <- test$relax
 mccr(answers, results)
 misClasificError <- mean(answers != results)
 print(paste('Accuracy',1-misClasificError))
+confusionMatrix(table(results, answers), mode = "prec_recall") 
+precision <- posPredValue(table(results, answers), positive = "1")
+recall  <- sensitivity(table(results, answers), postive = "1")
+f1_val <- (2 * precision * recall) / (precision + recall)
