@@ -95,8 +95,30 @@ fviz_nbclust(relaxed_8tracks_scaled, kmeans, nstart = 25, iter.max=30, method = 
 clusters_8tracks <- kmeans(relaxed_8tracks_scaled, 5)
 str(clusters_8tracks)
 clusters_8tracks$centers
-
 centroids_8tracks <- clusters_8tracks$centers
+
+#TENTANDO PEGAR DADO MAIS REPRESENTATIVO DOS CLUSTERS DO 8TRACKS
+
+teste_8tracks <- as.data.frame(relaxed_8tracks_scaled)
+
+teste_8tracks$cluster = clusters_8tracks$cluster
+
+cluster_col <- which(names(teste_8tracks)=="cluster")
+
+# without plyr
+candidates <- tapply(
+  1:nrow(teste_8tracks),
+  teste_8tracks$cluster,
+  function(id, data=teste_8tracks[id, ]) {
+    dists <- rowSums(sapply(data[, -cluster_col], function(x) (x-mean(x))^2))
+    rownames(data)[dists==min(dists)]
+  }
+)
+
+invisible(lapply(names(candidates), function(c_name, c_list=candidates[[c_name]]) {
+  print(paste("Candidates for cluster ",c_name))
+  print(c_list)
+}))
 
 library(MASS)
 parcoord(clusters_8tracks$centers, var.label=TRUE, col = rownames(clusters_8tracks$centers))
