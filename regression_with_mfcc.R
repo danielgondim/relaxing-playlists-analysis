@@ -54,18 +54,19 @@ results_prob <- predict(model_scaled,newdata=test,type='response')
 # If prob > 0.5 then 1, else 0
 results <- ifelse(results_prob > 0.5,1,0)
 answers <- test$relax
+table(results, answers)
 mccr(answers, results)
 misClasificError <- mean(answers != results)
 print(paste('Accuracy',1-misClasificError))
 output_dataframe <- tidy(model_scaled, conf.int=TRUE, conf.level=.95)
-confusionMatrix(table(results, answers), mode = "prec_recall") 
+confusionMatrix(table(results, answers), mode = "prec_recall", positive = "1") 
 precision <- posPredValue(table(results, answers), positive = "1")
 recall  <- sensitivity(table(results, answers), postive = "1")
 f1_val <- (2 * precision * recall) / (precision + recall)
 
 
 #k-means para 8tracks relaxed
-relaxed_8tracks <- read.csv("/home/danielgondim/workspace/relaxing-playlists-analysis/data/logistic_mfcc_8tracks_relax_v2.csv")
+relaxed_8tracks <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/tese/relaxing-playlists-analysis/data/logistic_mfcc_8tracks_relax_v2.csv")
 
 for(i in 2:ncol(relaxed_8tracks)) {
   relaxed_8tracks[,i] <- as.numeric(as.character(relaxed_8tracks[,i]))
@@ -147,7 +148,7 @@ answers <- test$relax
 mccr(answers, results)
 misClasificError <- mean(answers != results)
 print(paste('Accuracy',1-misClasificError))
-confusionMatrix(table(results, answers), mode = "prec_recall") 
+confusionMatrix(table(results, answers), mode = "prec_recall", positive = "1")
 precision <- posPredValue(table(results, answers), positive = "1")
 recall  <- sensitivity(table(results, answers), postive = "1")
 f1_val <- (2 * precision * recall) / (precision + recall)
