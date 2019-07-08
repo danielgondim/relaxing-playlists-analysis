@@ -89,8 +89,8 @@ fviz_nbclust(relaxed_8tracks_scaled, kmeans, method = "silhouette")+
   labs(subtitle = "Método da Silhueta", title = "Número Ótimo de Grupos", x = "Número de grupos K", y = "Largura média da silhueta")
 
 set.seed(123)
-fviz_nbclust(relaxed_8tracks_scaled, kmeans, nstart = 25, iter.max=30, method = "gap_stat", nboot = 100)+
-  labs(subtitle = "Estatística Gap", title = "Número Ótimo de Grupos", x = "Número de grupos K", y = "Estatística gap (k)")
+fviz_nbclust(relaxed_8tracks_scaled, kmeans, nstart = 25, iter.max=30, method = "gap_stat", nboot = 50)+
+  labs(subtitle = "Gap Statistic Method", title = "Optimal number of Clusters", x = "Number of Clusters K", y = "Gap Statistic(k)")
 
 clusters_8tracks <- kmeans(relaxed_8tracks_scaled, 5)
 str(clusters_8tracks)
