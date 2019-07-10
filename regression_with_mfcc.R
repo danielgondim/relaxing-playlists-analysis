@@ -46,7 +46,7 @@ set.seed(171)
 train_ind = sample(seq_len(nrow(musics_data_scaled)),size = smp_siz)
 train =musics_data_scaled[train_ind,]
 test=musics_data_scaled[-train_ind,]
-model_scaled <- glm(relax~.,family=binomial(link='logit'),data=train)
+model_scaled <- glm(relax~.,family=binomial(link='logit'),data=musics_data_scaled)
 summary(model_scaled)
 model_scaled <- glm(relax ~ energy + instrumentalness + loudness + valence + mffc3.mean + mffc6.mean  + mffc8.mean + mffc10.mean + mffc11.mean + mffc1.variance + mffc5.variance + mffc11.variance + mffc12.variance,family=binomial(link='logit'),data=train)
 anova(model_scaled, test="Chisq")
@@ -160,7 +160,7 @@ set.seed(171)
 train_ind = sample(seq_len(nrow(cluster_one_regression_scaled)),size = smp_siz)
 train =cluster_one_regression_scaled[train_ind,]
 test=cluster_one_regression_scaled[-train_ind,]
-model_cluster_one <- glm(relax~.,family=binomial(link='logit'),data=train)
+model_cluster_one <- glm(relax~.,family=binomial(link='logit'),data=cluster_one_regression_scaled)
 model_cluster_one <- glm(relax ~ energy + acousticness + valence + mffc12.variance, family=binomial(link='logit'),data=train)
 summary(model_cluster_one)
 results_prob <- predict(model_cluster_one,newdata=test,type='response')
@@ -185,7 +185,7 @@ set.seed(171)
 train_ind = sample(seq_len(nrow(cluster_two_regression_scaled)),size = smp_siz)
 train =cluster_two_regression_scaled[train_ind,]
 test=cluster_two_regression_scaled[-train_ind,]
-model_cluster_two <- glm(relax~.,family=binomial(link='logit'),data=train)
+model_cluster_two <- glm(relax~.,family=binomial(link='logit'),data=cluster_two_regression_scaled)
 model_cluster_two <- glm(relax ~ liveness + acousticness + loudness + mffc1.mean + mffc2.mean + mffc8.mean + mffc1.variance + mffc3.variance + mffc5.variance + mffc7.variance + mffc9.variance + mffc10.variance,family=binomial(link='logit'),data=train)
 summary(model_cluster_two)
 results_prob <- predict(model_cluster_two,newdata=test,type='response')
@@ -210,7 +210,7 @@ set.seed(171)
 train_ind = sample(seq_len(nrow(cluster_three_regression_scaled)),size = smp_siz)
 train =cluster_three_regression_scaled[train_ind,]
 test=cluster_three_regression_scaled[-train_ind,]
-model_cluster_three <- glm(relax~.,family=binomial(link='logit'),data=train)
+model_cluster_three <- glm(relax~.,family=binomial(link='logit'),data=cluster_three_regression_scaled)
 model_cluster_three <- glm(relax~ speechiness + acousticness + danceability + loudness + mffc3.mean + mffc5.mean + mffc7.mean + mffc8.mean + mffc10.mean + mffc11.mean + mffc2.variance + mffc3.variance + mffc4.variance + mffc6.variance + mffc8.variance + mffc11.variance + mffc12.variance,family=binomial(link='logit'),data=train)
 summary(model_cluster_three)
 results_prob <- predict(model_cluster_three,newdata=test,type='response')
@@ -235,7 +235,7 @@ set.seed(171)
 train_ind = sample(seq_len(nrow(cluster_four_regression_scaled)),size = smp_siz)
 train =cluster_four_regression_scaled[train_ind,]
 test=cluster_four_regression_scaled[-train_ind,]
-model_cluster_four <- glm(relax~.,family=binomial(link='logit'),data=train)
+model_cluster_four <- glm(relax~.,family=binomial(link='logit'),data=cluster_four_regression_scaled)
 model_cluster_four <- glm(relax~ energy + liveness + speechiness + acousticness + mffc3.mean + mffc4.mean + mffc7.mean + mffc8.mean + mffc10.mean + mffc1.variance + mffc11.variance + mffc12.variance,family=binomial(link='logit'),data=train)
 summary(model_cluster_four)
 results_prob <- predict(model_cluster_four,newdata=test,type='response')
@@ -260,7 +260,7 @@ set.seed(171)
 train_ind = sample(seq_len(nrow(cluster_five_regression_scaled)),size = smp_siz)
 train =cluster_five_regression_scaled[train_ind,]
 test=cluster_five_regression_scaled[-train_ind,]
-model_cluster_five <- glm(relax~.,family=binomial(link='logit'),data=train)
+model_cluster_five <- glm(relax~.,family=binomial(link='logit'),data=cluster_five_regression_scaled)
 model_cluster_five <- glm(relax~ danceability + valence + mffc4.mean + mffc5.mean + mffc6.mean + mffc10.mean + mffc4.variance + mffc10.variance,family=binomial(link='logit'),data=train)
 summary(model_cluster_five)
 results_prob <- predict(model_cluster_five,newdata=test,type='response')
