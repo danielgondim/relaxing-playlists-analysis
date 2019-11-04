@@ -7,10 +7,37 @@ library(caret)
 musics_data <- read.csv("/home/danielgondim/workspace/relaxing-playlists-analysis/data/logistic_mfcc_8tracks_without_users_complete_v2.csv")
 musics_data_2 <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/logistic_mfcc_8tracks.csv")
 
-for(i in c(1,2:ncol(musics_data))) {
+for(i in c(2,2:ncol(musics_data_2))) {
   print(i)
-  musics_data[,i] <- as.numeric(as.character(musics_data[,i]))
+  musics_data_2[,i] <- as.numeric(as.character(musics_data_2[,i]))
 }
+
+musics_data_2 <- musics_data_2[2:35] 
+
+#calculando correlação das features
+res <- cor(musics_data_2)
+round(res, 2)
+
+library(corrplot)
+corrplot(res, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+library(Hmisc)
+res2 <- rcorr(as.matrix(musics_data_2))
+res2
+
+# Extract the correlation coefficients
+res2$r
+# Extract p-values
+res2$P
+
+# Insignificant correlation are crossed
+corrplot(res2$r, type="upper", order="hclust", 
+         p.mat = res2$P, sig.level = 0.0001, insig = "blank", tl.srt = 45)
+# Insignificant correlations are leaved blank
+corrplot(res2$r, type="upper", order="hclust", 
+         p.mat = res2$P, sig.level = 0.95, insig = "blank", tl.srt = 45, tl.col = "black")
+
 
 rownames(relaxed_8tracks) <- relaxed_8tracks[,1]
 relaxed_8tracks <- relaxed_8tracks[,2:34]
@@ -121,8 +148,9 @@ invisible(lapply(names(candidates), function(c_name, c_list=candidates[[c_name]]
 }))
 
 library(MASS)
-parcoord(clusters_8tracks$centers, var.label=TRUE, col = rownames(clusters_8tracks$centers))
-
+parcoord(clusters_8tracks$centers, var.label=TRUE, col = rownames(clusters_8tracks$centers), lty = 1)
+write.csv(clusters_8tracks$centers, file = "clusters_centers.csv")
+clusters_8tracks$centers
 clusters_8tracks$cluster
 clusters_8tracks$size
 
