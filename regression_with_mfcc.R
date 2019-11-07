@@ -7,12 +7,12 @@ library(caret)
 musics_data <- read.csv("/home/danielgondim/workspace/relaxing-playlists-analysis/data/logistic_mfcc_8tracks_without_users_complete_v2.csv")
 musics_data_2 <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/logistic_mfcc_8tracks.csv")
 
-for(i in c(2,2:ncol(musics_data_2))) {
+for(i in c(2,2:ncol(music_data_std_dev))) {
   print(i)
-  musics_data_2[,i] <- as.numeric(as.character(musics_data_2[,i]))
+  music_data_std_dev[,i] <- as.numeric(as.character(music_data_std_dev[,i]))
 }
 
-musics_data_2 <- musics_data_2[2:35] 
+music_data_std_dev <- music_data_std_dev[2:35] 
 
 #calculando correlação das features
 res <- cor(musics_data_2)
@@ -302,3 +302,40 @@ confusionMatrix(table(results, answers), mode = "prec_recall")
 precision <- posPredValue(table(results, answers), positive = "1")
 recall  <- sensitivity(table(results, answers), postive = "1")
 f1_val <- (2 * precision * recall) / (precision + recall)
+
+#KMEANS COM DESVIO PADRÃO NOS DADOS
+music_data_std_dev <- read.csv("/home/danielgondim/workspace-new/phd/experiments/qualificacao/8tracks_relax_stdev_many_songs.csv")
+
+for(i in 2:ncol(music_data_std_dev)) {
+  music_data_std_dev[,i] <- as.numeric(as.character(music_data_std_dev[,i]))
+}
+
+rownames(music_data_std_dev) <- music_data_std_dev[,1]
+music_data_std_dev <- music_data_std_dev[,-1]
+music_data_std_dev <- music_data_std_dev[,-34]
+head(music_data_std_dev)
+
+music_data_std_dev_scaled <- scale(music_data_std_dev)
+
+library(factoextra)
+library(NbClust)
+
+fviz_nbclust(music_data_std_dev_scaled, kmeans, method = "wss") +
+  geom_vline(xintercept = 5, linetype = 2)+
+  labs(subtitle = "Método do Joelho", title = "Número Ótimo de Grupos", x = "Número de grupos K", y = "Soma total dos erros quadrados")
+
+fviz_nbclust(music_data_std_dev_scaled, kmeans, method = "silhouette")+
+  labs(subtitle = "Método da Silhueta", title = "Número Ótimo de Grupos", x = "Número de grupos K", y = "Largura média da silhueta")
+
+set.seed(123)
+fviz_nbclust(music_data_std_dev_scaled, kmeans, nstart = 25, iter.max=30, method = "gap_stat", nboot = 50, k.max = 20)+
+  labs(subtitle = "Gap Statistic Method", title = "Optimal number of Clusters", x = "Number of Clusters K", y = "Gap Statistic(k)")
+
+set.seed(123)
+fviz_nbclust(music_data_std_dev_scaled, kmeans(algorithm = "MacQueen"), nstart = 25, iter.max=30, method = "gap_stat", nboot = 50, k.max = 20, algori)+
+  labs(subtitle = "Gap Statistic Method", title = "Optimal number of Clusters", x = "Number of Clusters K", y = "Gap Statistic(k)")
+
+clusters_music_data_stdev <- kmeans(music_data_std_dev_scaled, 5)
+str(clusters_music_data_stdev)
+clusters_music_data_stdev$centers
+centroids_music_data_stdev <- clusters_music_data_stdev$centers
